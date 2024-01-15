@@ -7,18 +7,24 @@ import com.example.hello.member.MemberServiceImpl;
 import com.example.hello.order.Order;
 import com.example.hello.order.OrderService;
 import com.example.hello.order.OrderServiceImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class OrderApp {
     public static void main(String[] args) {
-        AppConfig appConfig=new AppConfig();//생성자 주입기를 사용하여 정의
+        /*AppConfig appConfig=new AppConfig();//생성자 주입기를 사용하여 정의
         MemberService memberService=appConfig.memberService();
-        OrderService orderService=appConfig.orderService();
+        OrderService orderService=appConfig.orderService();*/
+
+        ApplicationContext applicationContext=new AnnotationConfigApplicationContext(AppConfig.class);
+        MemberService memberService = applicationContext.getBean("memberService", MemberService.class);
+        OrderService orderService = applicationContext.getBean("orderService", OrderService.class);
 
         Long memberId=1l;
         Member member=new Member(memberId,"memberA", Grade.VIP);
         memberService.join(member);//회원 가입
 
-        Order order = orderService.createOrder(memberId, "itemA", 10000);
+        Order order = orderService.createOrder(memberId, "itemA", 20000);
         //상픔 구매
         System.out.println("order = " + order);//상품 정보
         System.out.println("order.calculatePrice() = " + order.calculatePrice());
